@@ -3,7 +3,7 @@ import Menu from "../menu";
 
 function Header() {
   return (
-  <div>
+  <div className="bg-blue-400 w-full text-xl">
     <Menu/>
   </div>
   );
