@@ -7,6 +7,8 @@ export default function Menu() {
     <Link href="/" className="bg-blue-800 rounded-xl p-2">Home</Link>
     <Link href="/profile" className="bg-blue-800 rounded-xl p-2">Profile</Link>
     <Link href="/users" className="bg-blue-800 rounded-xl p-2">Users</Link>
+    <Link href="/notes" className="bg-blue-800 rounded-xl p-2">Notes</Link>
+    <Link href="/products" className="bg-blue-800 rounded-xl p-2">Products</Link>
   </div>
   </>
   )

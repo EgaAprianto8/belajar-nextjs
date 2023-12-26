@@ -17,6 +17,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "layouts/index.js", "pages/users/detail.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "layouts/index.js", "pages/users/detail.js", "pages/note.js"],
   "exclude": ["node_modules"]
 }
