@@ -19,7 +19,7 @@ export default function NotesDetail({ note }) {
 
 export async function getStaticPaths() {
   try {
-    const res = await fetch("https://simpeg-be.vercel.app/api/v2/notes");
+    const res = await fetch(`http://localhost:3000/api/notes`);
     const notes = await res.json();
     const paths = notes?.data?.map((item) => ({
       params: {
@@ -38,7 +38,7 @@ export async function getStaticPaths() {
 export async function getStaticProps(context) {
   const { id } = context.params;
   try {
-    const res = await fetch(`https://simpeg-be.vercel.app/api/v2/notes/${id}`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notes/${id}`);
     const note = await res.json();
     return { props: { note }, revalidate: 10 };
   } catch (error) {

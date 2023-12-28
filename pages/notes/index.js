@@ -11,22 +11,47 @@ import {
  Heading,
  Text,
  Button,
+ Spinner
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Axios from "axios";
+
    
 const LayoutComponent = dynamic(() => import("@/layouts"));
    
 export default function Notes() {
  const router = useRouter();
  const [notes, setNotes] = useState();  
+ const [isLoading, setIsLoading] = useState(true);
+ const [isError, setError] = useState(false)
+
+ const handleDelete = async (id) =>{
+  try {
+   const response = await fetch(
+    `http://localhost:3000/api/notes/delete/${id}`,
+    {
+     method: "POST",
+    }
+   );
+   const result = await response.json();
+   if (result?.success) {
+    router.reload()
+   }
+  } catch (error) {}
+ }
    
  useEffect(() => {
   async function fetchingData() {
-    //Saya gk ngerti kenapa error nya Unhandled Runtime Error padahal sudah sesuai dengan intruksi pada materi
-   const res = await fetch("https://simpeg-be.vercel.app/api/v2/notes");
-   const listNotes = await res.json();
-   setNotes(listNotes);
+    //Saya coba memperbaiki code nya dengan mengikuti Live Session pertemuan 13
+   try {
+    const response = await Axios.get(`http://localhost:3000/api/notes`);
+    setNotes(response?.data);
+    setIsLoading(false)
+   } catch (error) {
+    setIsLoading(false)
+    setError(true)
+  }
   }
   fetchingData();
  }, []);  
@@ -34,15 +59,22 @@ export default function Notes() {
  return (
  <>
   <LayoutComponent metaTitle="Notes">
-   <Box padding="5">
-    <Flex justifyContent="end">
+   <Box padding="5" align = "end">
      <Button
       colorScheme="blue"
       onClick={() => router.push("/notes/add")}
      >
       Add Notes
      </Button>
-    </Flex>
+    <Flex justifyContent="center" p={4}>
+       {isLoading && !isError ? (
+          <Flex 
+          justifyContent="center"
+          alignItems="center"
+          height="60vh" >
+            <Spinner size="xl" />
+          </Flex>
+        ) : ( 
     <Flex>
      <Grid templateColumns="repeat(3, 1fr)" gap={5}>
       {notes?.data?.map((item) => (
@@ -65,6 +97,7 @@ export default function Notes() {
           <Button
            flex="1"
            colorScheme="red"
+           onClick={()=> handleDelete(item.id)}
           >
            Delete
           </Button>
@@ -73,6 +106,11 @@ export default function Notes() {
        </GridItem>
       ))}
      </Grid>
+    </Flex>
+        )}
+        {isError && (
+          <Button onClick={() => window.location.reload()}>Refresh Page</Button>
+        )}
     </Flex>
    </Box>
   </LayoutComponent>

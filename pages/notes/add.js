@@ -20,26 +20,29 @@ export default function AddNotes() {
   title:"",
   description:"",
  });
-  
+ const [submitLoading, setSubmitLoading] = useState(false) 
+
  const HandleSubmit = async () => {
+  setSubmitLoading(true)
   try {
+    //saya ada error status 500, saya bingung karena output pada live session dan saya berbeda, padahal sudah saya sesuaikan 🙏
    const response = await fetch(
-    "https://simpeg-be.vercel.app/api/v2/notes",
+    "http://localhost:3000/api/notes/add",
     {
      method: "POST",
-     headers: {
-      "Content-Type": "application/json",
-     },
      body: JSON.stringify(notes),
     }
    );
    const result = await response.json();
    if (result?.success) {
+    setSubmitLoading(false)
     router.push("/notes");
    }
-  } catch (error) {}
+  } catch (error) {
+    setSubmitLoading(false)
+  }
  };
-   
+ 
  return (
  <>
   <LayoutComponent metaTitle="Notes">
@@ -64,7 +67,7 @@ export default function AddNotes() {
       />
      </GridItem>
      <GridItem>
-      <Button onClick={() => HandleSubmit()} colorScheme="blue">
+      <Button isLoading={submitLoading} onClick={() => HandleSubmit()} colorScheme="blue">
        Submit
       </Button>
      </GridItem>
