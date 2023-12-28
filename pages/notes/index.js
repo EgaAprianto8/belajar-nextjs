@@ -16,14 +16,19 @@ import {
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Axios from "axios";
+import { useQueries } from "../../hooks/useQueries";
 
    
 const LayoutComponent = dynamic(() => import("@/layouts"));
    
 export default function Notes() {
+  
+ const { data, isLoading } = useQueries({ 
+  prefixUrl: "http://localhost:3000/api/notes",
+})
+
  const router = useRouter();
  const [notes, setNotes] = useState();  
- const [isLoading, setIsLoading] = useState(true);
  const [isError, setError] = useState(false)
 
  const handleDelete = async (id) =>{
@@ -41,21 +46,6 @@ export default function Notes() {
   } catch (error) {}
  }
    
- useEffect(() => {
-  async function fetchingData() {
-    //Saya coba memperbaiki code nya dengan mengikuti Live Session pertemuan 13
-   try {
-    const response = await Axios.get(`http://localhost:3000/api/notes`);
-    setNotes(response?.data);
-    setIsLoading(false)
-   } catch (error) {
-    setIsLoading(false)
-    setError(true)
-  }
-  }
-  fetchingData();
- }, []);  
-   console.log("notes => ", notes)
  return (
  <>
   <LayoutComponent metaTitle="Notes">
@@ -77,7 +67,7 @@ export default function Notes() {
         ) : ( 
     <Flex>
      <Grid templateColumns="repeat(3, 1fr)" gap={5}>
-      {notes?.data?.map((item) => (
+      {data?.data?.map((item) => (
        <GridItem key={item.id}>
         <Card>
          <CardHeader>

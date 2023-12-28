@@ -11,10 +11,12 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { useMutation } from "@/hooks/useMutation"
   
 const LayoutComponent = dynamic(() => import("@/layouts")); 
   
 export default function AddNotes() {
+  const { mutate } = useMutation();
  const router = useRouter();
  const [notes, setNotes] = useState({
   title:"",
@@ -23,24 +25,11 @@ export default function AddNotes() {
  const [submitLoading, setSubmitLoading] = useState(false) 
 
  const HandleSubmit = async () => {
-  setSubmitLoading(true)
-  try {
-    //saya ada error status 500, saya bingung karena output pada live session dan saya berbeda, padahal sudah saya sesuaikan 🙏
-   const response = await fetch(
-    "http://localhost:3000/api/notes/add",
-    {
-     method: "POST",
-     body: JSON.stringify(notes),
-    }
-   );
-   const result = await response.json();
-   if (result?.success) {
-    setSubmitLoading(false)
-    router.push("/notes");
-   }
-  } catch (error) {
-    setSubmitLoading(false)
-  }
+   const response = await mutate ({
+    url : "http://localhost:3000/api/notes/add",
+    payload: notes, 
+   })
+   console.log("response => ", response)
  };
  
  return (
